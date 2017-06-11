@@ -32,7 +32,7 @@ w = [0, 1, -1]
 transform = np.array([[1.0, 0.0, wwidth/2.0], 
 					  [0.0, 1.0, wheight/2.0],
 					  [0.0, 0.0, 1.0]])
-scalef = 140.0
+scalef = 100.0
 scale = np.array([[scalef, 0.0, 0.0],
 				  [0.0, -scalef, 0.0],
 				  [0.0, 0.0, 1.0]])
@@ -118,28 +118,41 @@ while True:
 
 	#train perceptron
 	if training and time() > timeNextStep:
-		print("training!")
+		print("training!" + "#"*30)
+		print("used values to classify:")
 		print("b:", w[0])
 		print("w1:", w[1])
 		print("w2:", w[2])
 		future_w = deepcopy(w)
 		for point in pointsRed + pointsBlue:
 			val = 1.0 * w[0] + point[0] * w[1] + point[1] * w[2]
-			val = sgn(val)
+			sval = sgn(val)
 			if (point in pointsBlue):				
-				if (val > 0.0):
+				if (sval > 0.0):
 					print("One or more points of Class B(Blue) were wrong!")
+					print("p(" + " ,".join(map(lambda x: str(x), point)) + ") = " + str(val))
 					future_w[0] = future_w[0] - 1.0 * 1.0 #b
 					future_w[1] = future_w[1] - 1.0 * point[0] #w1
 					future_w[2] = future_w[2] - 1.0 * point[1] #w2
+				else:
+					print("Correct classified of Class B(Blue)")
+					print("p(" + " ,".join(map(lambda x: str(x), point)) + ") = " + str(val))
 			else:				
-				if (val <= 0.0):
+				if (sval <= 0.0):
 					print("One or more points of Class A(Red) were wrong!")
+					print("p(" + " ,".join(map(lambda x: str(x), point)) + ") = " + str(val))
 					future_w[0] = future_w[0] - (-1.0) * 1.0 #b
 					future_w[1] = future_w[1] - (-1.0) * point[0] #w1
 					future_w[2] = future_w[2] - (-1.0) * point[1] #w2
+				else:
+					print("Correct classified of Class A(Red)")
+					print("p(" + " ,".join(map(lambda x: str(x), point)) + ") = " + str(val))
 		del(w) #unneccessary?
 		w = future_w
+		print("new/corrected values:")
+		print("b:", w[0])
+		print("w1:", w[1])
+		print("w2:", w[2])
 
 
 
